@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Mini Saya</title>
+    
+    <!-- 1. Script WAJIB dari Telegram -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <style>
+        /* CSS untuk membuat tampilan terasa seperti aplikasi */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 18px;
+            margin: 0;
+            color: var(--tg-theme-text-color, #222);
+            background-color: var(--tg-theme-bg-color, #fff);
+        }
+        .container {
+            max-width: 390px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: var(--tg-theme-secondary-bg-color, #f1f1f1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        img {
+            max-width: 100px;
+            border-radius: 8px;
+        }
+        h1 {
+            font-size: 24px;
+        }
+        p {
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            color: var(--tg-theme-button-text-color, #fff);
+            background-color: var(--tg-theme-button-color, #007bff);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <!-- Gambar placeholder produk -->
+            <img src="https://placehold.co/400x400/7B68EE/FFFFFF?text=Produk" alt="Gambar Produk Digital">
+            <h1>Produk Digital Keren</h1>
+            <p>Ini adalah deskripsi singkat tentang produk digital yang sangat bermanfaat.</p>
+            <p id="userInfo">Memuat data pengguna...</p>
+        </div>
+        
+        <button id="orderButton">Pesan Sekarang (Rp 25.000)</button>
+    </div>
+
+    <script>
+        // 2. Inisialisasi Telegram Web App
+        const WebApp = window.Telegram.WebApp;
+        WebApp.ready(); // Memberitahu Telegram bahwa aplikasi siap
+
+        // 3. Menampilkan data pengguna
+        const userInfoDiv = document.getElementById('userInfo');
+        if (WebApp.initDataUnsafe.user) {
+            const user = WebApp.initDataUnsafe.user;
+            userInfoDiv.innerHTML = `Hai, <strong>${user.first_name || ''}</strong>! Siap memesan?`;
+        } else {
+            userInfoDiv.innerHTML = 'Buka dari bot untuk pengalaman terbaik.';
+        }
+
+        // 4. Mengirim data ke bot saat tombol diklik
+        const orderButton = document.getElementById('orderButton');
+        orderButton.addEventListener('click', () => {
+            const dataToSend = JSON.stringify({
+                product_id: "PROD-001",
+                product_name: "Produk Digital Keren",
+                price: 25000,
+                order_time: new Date().toISOString()
+            });
+            // Fungsi ini akan mengirim data kembali ke bot Anda
+            WebApp.sendData(dataToSend);
+        });
+        
+        // 5. Mengatur tombol utama di bagian bawah layar
+        WebApp.MainButton.setText("Tutup Toko");
+        WebApp.MainButton.show();
+        WebApp.MainButton.onClick(() => {
+            WebApp.close(); // Menutup Mini App
+        });
+    </script>
+</body>
+</html>
